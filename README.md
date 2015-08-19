@@ -21,7 +21,7 @@ For instance, running:
 
     go-buildall buildall -race
 
-would run
+in a Go package directory would run
 
     go build -race
 
