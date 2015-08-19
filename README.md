@@ -17,7 +17,7 @@ with `ARGUMENTS`, saving the output of each command to `PATH/[OS]/[arch]`:
 
     go-buildall [PATH] [ARGUMENTS]
 
-For instance, running:
+For instance, running
 
     go-buildall buildall -race
 
@@ -25,17 +25,14 @@ in a Go package directory would run
 
     go build -race
 
-for each OS/architecture combination, creating a hierarchy like
+for each OS/architecture combination, creating a hierarchy like:
 
     buildall/
         darwin/
-		386
-	darwin/
-		amd64
-	darwin/
-		arm
-	darwin/
-		arm64
-	dragonfly/
-		amd64
+            386
+            amd64
+            arm
+            arm64
+        dragonfly/
+            amd64
 	...
