@@ -37,5 +37,10 @@ for each OS/architecture combination, creating a hierarchy like:
             amd64
     ...
 
-Note that if the `-o` flag is included in `ARGUMENTS`, the executables will not
-save in the correct location but will instead overwrite each other.
+Notes
+-----
+
+*   Packages using `cgo` cannot cross-compile without rebuilding the toolchain.
+
+*   If the `-o` flag is included in `ARGUMENTS`, the executables will not
+    save in the correct location but will instead overwrite each other.
