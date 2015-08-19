@@ -36,3 +36,6 @@ for each OS/architecture combination, creating a hierarchy like:
         dragonfly/
             amd64
     ...
+
+Note that if the `-o` flag is included in `ARGUMENTS`, the executables will not
+save in the correct location but will instead overwrite each other.
