@@ -1,7 +1,7 @@
 go-buildall
 ===========
 
-A tool which builds Go programs for every OS and architecture
+A tool which builds Go packages for every OS and architecture
 
 Building
 --------
