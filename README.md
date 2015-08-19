@@ -13,7 +13,7 @@ Usage
 
 Run the `go build` command for
 [every supported OS and architecture combination](https://golang.org/doc/install/source#environment)
-with `ARGUMENTS`, saving the output of each command to `PATH/[OS]/[arch]`:
+with `ARGUMENTS`, saving the output of each command to `PATH/[OS]-[arch]`:
 
     go-buildall [PATH] [ARGUMENTS]
 
@@ -28,14 +28,12 @@ in a Go package directory would run
 for each OS/architecture combination, creating a hierarchy like:
 
     buildall/
-        darwin/
-            386
-            amd64
-            arm
-            arm64
-        dragonfly/
-            amd64
-    ...
+        darwin-386
+        darwin-amd64
+        darwin-arm
+        darwin-arm64
+        dragonfly-amd64
+        ...
 
 Notes
 -----

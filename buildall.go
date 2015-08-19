@@ -71,11 +71,11 @@ func main() {
 		flag.Usage()
 		os.Exit(1)
 	}
+	root := args[0]
+	if err := os.Mkdir(root, 0755); err != nil {
+		log.Fatal(err)
+	}
 	for osname, archs := range osarchs {
-		osPath := path.Join(args[0], osname)
-		if err := os.MkdirAll(osPath, 0755); err != nil {
-			log.Fatal(err)
-		}
 		if err := os.Setenv("GOOS", osname); err != nil {
 			log.Fatal(err)
 		}
@@ -83,7 +83,11 @@ func main() {
 			if err := os.Setenv("GOARCH", arch); err != nil {
 				log.Fatal(err)
 			}
-			buildArgs := append([]string{"build", "-o", path.Join(osPath, arch)}, args[1:]...)
+			buildArgs := append([]string{
+					"build",
+					"-o",
+					path.Join(root, osname+"-"+arch),
+				}, args[1:]...)
 			cmd := exec.Command("go", buildArgs...)
 			out, err := cmd.CombinedOutput()
 			if err != nil {
