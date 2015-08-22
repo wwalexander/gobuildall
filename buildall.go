@@ -9,6 +9,18 @@ import (
 )
 
 const (
+	osdarwin = "darwin"
+	osdragonfly = "dragonfly"
+	osfreebsd = "freebsd"
+	oslinux = "linux"
+	osnetbsd = "netbsd"
+	osopenbsd = "openbsd"
+	osplan9 = "plan9"
+	ossolaris = "solaris"
+	oswindows = "windows"
+)
+
+const (
 	arch386     = "386"
 	archamd64   = "amd64"
 	archarm     = "arm"
@@ -19,21 +31,21 @@ const (
 
 // https://golang.org/doc/install/source#environment
 var osarchs = map[string][]string{
-	"darwin": []string{
+	osdarwin: []string{
 		arch386,
 		archamd64,
 		archarm,
 		archarm64,
 	},
-	"dragonfly": {
+	osdragonfly: {
 		archamd64,
 	},
-	"freebsd": {
+	osfreebsd: {
 		arch386,
 		archamd64,
 		archarm,
 	},
-	"linux": {
+	oslinux: {
 		arch386,
 		archamd64,
 		archarm,
@@ -41,24 +53,24 @@ var osarchs = map[string][]string{
 		archppc64,
 		archppc64le,
 	},
-	"netbsd": {
+	osnetbsd: {
 		arch386,
 		archamd64,
 		archarm,
 	},
-	"openbsd": {
+	osopenbsd: {
 		arch386,
 		archamd64,
 		archarm,
 	},
-	"plan9": {
+	osplan9: {
 		arch386,
 		archamd64,
 	},
-	"solaris": {
+	ossolaris: {
 		archamd64,
 	},
-	"windows": {
+	oswindows: {
 		arch386,
 		archamd64,
 	},
@@ -82,6 +94,10 @@ func main() {
 		for _, arch := range archs {
 			if err := os.Setenv("GOARCH", arch); err != nil {
 				log.Fatal(err)
+			}
+			outPath := path.Join(root, osname+"-"+arch)
+			if osname == oswindows {
+				outPath += ".exe"
 			}
 			buildArgs := append([]string{
 					"build",
