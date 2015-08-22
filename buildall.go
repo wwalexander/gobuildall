@@ -102,7 +102,7 @@ func main() {
 			buildArgs := append([]string{
 					"build",
 					"-o",
-					path.Join(root, osname+"-"+arch),
+					outPath,
 				}, args[1:]...)
 			cmd := exec.Command("go", buildArgs...)
 			out, err := cmd.CombinedOutput()
