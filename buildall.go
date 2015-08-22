@@ -9,15 +9,15 @@ import (
 )
 
 const (
-	osdarwin = "darwin"
+	osdarwin    = "darwin"
 	osdragonfly = "dragonfly"
-	osfreebsd = "freebsd"
-	oslinux = "linux"
-	osnetbsd = "netbsd"
-	osopenbsd = "openbsd"
-	osplan9 = "plan9"
-	ossolaris = "solaris"
-	oswindows = "windows"
+	osfreebsd   = "freebsd"
+	oslinux     = "linux"
+	osnetbsd    = "netbsd"
+	osopenbsd   = "openbsd"
+	osplan9     = "plan9"
+	ossolaris   = "solaris"
+	oswindows   = "windows"
 )
 
 const (
@@ -31,7 +31,7 @@ const (
 
 // https://golang.org/doc/install/source#environment
 var osarchs = map[string][]string{
-	osdarwin: []string{
+	osdarwin: {
 		arch386,
 		archamd64,
 		archarm,
@@ -100,10 +100,10 @@ func main() {
 				outPath += ".exe"
 			}
 			buildArgs := append([]string{
-					"build",
-					"-o",
-					outPath,
-				}, args[1:]...)
+				"build",
+				"-o",
+				outPath,
+			}, args[1:]...)
 			cmd := exec.Command("go", buildArgs...)
 			out, err := cmd.CombinedOutput()
 			if err != nil {
