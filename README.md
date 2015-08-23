@@ -1,4 +1,4 @@
-go-buildall
+gobuildall
 ===========
 
 A tool which builds Go packages for every OS and architecture
@@ -15,11 +15,11 @@ Run the `go build` command for
 [every supported OS and architecture combination](https://golang.org/doc/install/source#environment)
 with `ARGUMENTS`, saving the output of each command to `PATH/[OS]-[arch]`:
 
-    go-buildall [PATH] [ARGUMENTS]
+    gobuildall [PATH] [ARGUMENTS]
 
 For instance, running
 
-    go-buildall buildall -race
+    gobuildall buildall -race
 
 in a Go package directory would run
 
