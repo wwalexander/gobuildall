@@ -84,6 +84,7 @@ func main() {
 		os.Exit(1)
 	}
 	root := args[0]
+	buildArgs := args[1:]
 	if err := os.Mkdir(root, 0755); err != nil {
 		log.Fatal(err)
 	}
@@ -103,7 +104,7 @@ func main() {
 				"build",
 				"-o",
 				outPath,
-			}, args[1:]...)
+			}, buildArgs...)
 			cmd := exec.Command("go", buildArgs...)
 			out, err := cmd.CombinedOutput()
 			if err != nil {
