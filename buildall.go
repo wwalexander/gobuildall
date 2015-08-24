@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -77,6 +78,10 @@ var osarchs = map[string][]string{
 }
 
 func main() {
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "%s [PATH] [ARGUMENTS]\n", os.Args[0])
+	}
 	flag.Parse()
 	args := flag.Args()
 	if len(args) < 1 {
