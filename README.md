@@ -44,5 +44,5 @@ Notes
     save in the correct location but will instead overwrite each other.
 
 *   [mitchellh/gox](https://github.com/mitchellh/gox) is a more full-featured
-    tool, which works with Go <1.5 and `cgo`. go-buildall is more similar to a
+    tool, which works with Go <1.5 and `cgo`. gobuildall is more similar to a
     shell script than a real program.
