@@ -77,10 +77,48 @@ var osarchs = map[string][]string{
 	},
 }
 
+// Build builds a Go package for the given operating system and architecture
+// with the given arguments, saving the output to the folder given by root.
+func Build(osname string, arch string, args []string, root string) error {
+	if err := os.Setenv("GOOS", osname); err != nil {
+		return err
+	}
+	if err := os.Setenv("GOARCH", arch); err != nil {
+		return err
+	}
+	outPath := path.Join(root, osname+"-"+arch)
+	if osname == oswindows {
+		outPath += ".exe"
+	}
+	args = append([]string{
+		"build",
+		"-o",
+		outPath,
+	}, args...)
+	cmd := exec.Command("go", args...)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, out)
+		return err
+	}
+	return nil
+}
+
+const usage = `usage: gobuildall [path] [arguments]
+
+gobuildall runs the go build command for every supported OS and architecture
+combination. If arguments are specified, they are passed to the go build
+command. The output flag of each go build command is set to the given path;
+the output's file name is of the form os-architecture.
+
+If the -o flag is specified in the given arguments, the files will not save in
+the correct location but will instead overwrite each other. Packages using cgo
+cannot be built.
+`
+
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage of %s:\n", os.Args[0])
-		fmt.Fprintf(os.Stderr, "%s [PATH] [ARGUMENTS]\n", os.Args[0])
+		fmt.Fprintln(os.Stderr, usage)
 	}
 	flag.Parse()
 	args := flag.Args()
@@ -94,29 +132,12 @@ func main() {
 		log.Fatal(err)
 	}
 	for osname, archs := range osarchs {
-		if err := os.Setenv("GOOS", osname); err != nil {
-			log.Fatal(err)
-		}
 		for _, arch := range archs {
-			if err := os.Setenv("GOARCH", arch); err != nil {
-				log.Fatal(err)
+			if err := Build(osname, arch, buildArgs, root); err != nil {
+				fmt.Fprintf(os.Stderr, "building %s/%s failed: %v\n", osname, arch, err)
+				continue
 			}
-			outPath := path.Join(root, osname+"-"+arch)
-			if osname == oswindows {
-				outPath += ".exe"
-			}
-			buildArgs := append([]string{
-				"build",
-				"-o",
-				outPath,
-			}, buildArgs...)
-			cmd := exec.Command("go", buildArgs...)
-			out, err := cmd.CombinedOutput()
-			if err != nil {
-				log.Printf("building %s/%s failed:\n%s", osname, arch, out)
-			} else {
-				log.Printf("building %s/%s succeeded", osname, arch)
-			}
+			fmt.Fprintf(os.Stderr, "building %s/%s succeeded", osname, arch)
 		}
 	}
 }
