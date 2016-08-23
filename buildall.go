@@ -10,6 +10,7 @@ import (
 )
 
 const (
+	osandroid   = "android"
 	osdarwin    = "darwin"
 	osdragonfly = "dragonfly"
 	osfreebsd   = "freebsd"
@@ -32,6 +33,9 @@ const (
 
 // https://golang.org/doc/install/source#environment
 var osarchs = map[string][]string{
+	osandroid: {
+		archarm,
+	},
 	osdarwin: {
 		arch386,
 		archamd64,
