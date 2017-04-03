@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"path"
 )
 
 const (
@@ -23,12 +22,16 @@ const (
 )
 
 const (
-	arch386     = "386"
-	archamd64   = "amd64"
-	archarm     = "arm"
-	archarm64   = "arm64"
-	archppc64   = "ppc64"
-	archppc64le = "ppc64le"
+	arch386      = "386"
+	archamd64    = "amd64"
+	archarm      = "arm"
+	archarm64    = "arm64"
+	archmips     = "mips"
+	archmipsle   = "mipsle"
+	archmips64   = "mips64"
+	archmips64le = "mips64le"
+	archppc64    = "ppc64"
+	archppc64le  = "ppc64le"
 )
 
 // https://golang.org/doc/install/source#environment
@@ -57,6 +60,10 @@ var osarchs = map[string][]string{
 		archarm64,
 		archppc64,
 		archppc64le,
+		archmips,
+		archmipsle,
+		archmips64,
+		archmips64le,
 	},
 	osnetbsd: {
 		arch386,
@@ -82,42 +89,34 @@ var osarchs = map[string][]string{
 }
 
 // Build builds a Go package for the given operating system and architecture
-// with the given arguments, saving the output to the folder given by root.
-func Build(osname string, arch string, args []string, root string) error {
+// with the given arguments.
+func Build(osname string, arch string, args []string) error {
 	if err := os.Setenv("GOOS", osname); err != nil {
 		return err
 	}
 	if err := os.Setenv("GOARCH", arch); err != nil {
 		return err
 	}
-	outPath := path.Join(root, osname+"-"+arch)
-	if osname == oswindows {
-		outPath += ".exe"
+	path := osname + "-" + arch
+	if osname == "windows" {
+		osname += ".exe"
 	}
-	args = append([]string{
+	cmd := exec.Command("go", append([]string{
 		"build",
 		"-o",
-		outPath,
-	}, args...)
-	cmd := exec.Command("go", args...)
-	out, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, out)
-		return err
-	}
-	return nil
+		path,
+	}, args...)...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
 
-const usage = `usage: gobuildall [path] [arguments]
+const usage = `usage: gobuildall [arguments]
 
 gobuildall runs the go build command for every supported OS and architecture
 combination. If arguments are specified, they are passed to the go build
 command. The output flag of each go build command is set to the named path;
-the file name is of the form os-architecture.
-
-If the -o flag is specified in the given arguments, the files will not save in
-the correct location but will instead overwrite each other. Packages using cgo
-cannot be built.`
+the file name is of the form os-architecture.`
 
 func main() {
 	flag.Usage = func() {
@@ -125,22 +124,33 @@ func main() {
 	}
 	flag.Parse()
 	args := flag.Args()
-	if len(args) < 1 {
-		flag.Usage()
-		os.Exit(1)
-	}
-	root := args[0]
-	buildArgs := args[1:]
-	if err := os.Mkdir(root, 0755); err != nil {
-		log.Fatal(err)
+	for _, arg := range args {
+		if arg == "-o" {
+			log.Fatal("-o is not allowed")
+		}
 	}
 	for osname, archs := range osarchs {
 		for _, arch := range archs {
-			if err := Build(osname, arch, buildArgs, root); err != nil {
-				fmt.Fprintf(os.Stderr, "building %s/%s failed: %v\n", osname, arch, err)
+			if err := Build(
+				osname,
+				arch,
+				args,
+			); err != nil {
+				fmt.Fprintf(
+					os.Stderr,
+					"building %s/%s failed: %v\n",
+					osname,
+					arch,
+					err,
+				)
 				continue
 			}
-			fmt.Fprintf(os.Stderr, "building %s/%s succeeded", osname, arch)
+			fmt.Fprintf(
+				os.Stderr,
+				"building %s/%s succeeded\n",
+				osname,
+				arch,
+			)
 		}
 	}
 }
