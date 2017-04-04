@@ -115,8 +115,8 @@ const usage = `usage: gobuildall [arguments]
 
 gobuildall runs the go build command for every supported OS and architecture
 combination. If arguments are specified, they are passed to the go build
-command. The output flag of each go build command is set to the named path;
-the file name is of the form os-architecture.`
+command. Executables for each combination are output to files named as
+os-architecture.`
 
 func main() {
 	flag.Usage = func() {
