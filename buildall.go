@@ -131,7 +131,7 @@ func main() {
 	}
 	for osname, archs := range osarchs {
 		for _, arch := range archs {
-			fmt.Printf("%s-%s\n", osname, arch)
+			fmt.Printf("%s/%s\n", osname, arch)
 			if err := Build(
 				osname,
 				arch,
