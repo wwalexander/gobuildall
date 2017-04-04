@@ -97,7 +97,7 @@ func Build(osname string, arch string, args []string) error {
 	if err := os.Setenv("GOARCH", arch); err != nil {
 		return err
 	}
-	path := osname + "-" + arch
+	path := fmt.Sprintf("%s-%s", osname, arch)
 	if osname == "windows" {
 		osname += ".exe"
 	}
@@ -131,26 +131,15 @@ func main() {
 	}
 	for osname, archs := range osarchs {
 		for _, arch := range archs {
+			fmt.Printf("%s-%s\n", osname, arch)
 			if err := Build(
 				osname,
 				arch,
 				args,
 			); err != nil {
-				fmt.Fprintf(
-					os.Stderr,
-					"building %s/%s failed: %v\n",
-					osname,
-					arch,
-					err,
-				)
+				log.Println(err)
 				continue
 			}
-			fmt.Fprintf(
-				os.Stderr,
-				"building %s/%s succeeded\n",
-				osname,
-				arch,
-			)
 		}
 	}
 }
